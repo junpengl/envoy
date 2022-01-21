@@ -35,6 +35,19 @@ public:
   resolveDynamicServiceAndMethod(const Http::HeaderEntry* path) PURE;
 
   /**
+   * Parses out request grpc service-name and method from the path, returning a
+   * populated RequestStatNames if successful. See the implementation
+   * (source/common/grpc/common.h) for the definition of RequestStatNames. It is
+   * hidden in the implementation since it references StatName, which is defined
+   * only in the stats implementation.
+   *
+   * @param path the request path.
+   * @return the request names, expressed as StatName.
+   */
+  virtual std::pair<absl::optional<RequestStatNames>, std::unique_ptr<std::string>>
+  resolveDynamicServiceAndMethodWithDotReplaced(const Http::HeaderEntry* path) PURE;
+
+  /**
    * Charge a success/failure stat to a cluster/service/method.
    * @param cluster supplies the target cluster.
    * @param protocol supplies the downstream protocol in use.

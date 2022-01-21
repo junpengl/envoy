@@ -19,6 +19,7 @@ option (udpa.annotations.file_status).package_version_status = ACTIVE;
 // [#extension: envoy.filters.http.grpc_stats]
 
 // gRPC statistics filter configuration
+// [#next-free-field: 6]
 message FilterConfig {
   option (udpa.annotations.versioning).previous_message_type =
       "envoy.config.filter.http.grpc_stats.v2alpha.FilterConfig";
@@ -59,6 +60,10 @@ message FilterConfig {
   // <envoy_api_field_extensions.filters.http.grpc_stats.v3.FilterConfig.individual_method_stats_allowlist>` the same way
   // request_message_count and response_message_count works.
   bool enable_upstream_stats = 4;
+
+  // if true, the filter will replace dots in the grpc_service_name before emitting the metrics.
+  // By default it is set as false.
+  bool replace_dots_in_grpc_service_name = 5;
 }
 
 // gRPC statistics filter state object in protobuf form.
