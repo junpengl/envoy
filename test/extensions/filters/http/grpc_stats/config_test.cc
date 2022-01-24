@@ -72,6 +72,7 @@ protected:
 
 TEST_F(GrpcStatsFilterConfigTest, StatsHttp2HeaderOnlyResponse) {
   config_.mutable_stats_for_all_methods()->set_value(true);
+  config_.set_replace_dots_in_grpc_service_name(true);
   initialize();
   Http::TestRequestHeaderMapImpl request_headers{
       {"content-type", "application/grpc"},
@@ -95,11 +96,20 @@ TEST_F(GrpcStatsFilterConfigTest, StatsHttp2HeaderOnlyResponse) {
                      ->statsScope()
                      .counterFromString("grpc.lyft.users.BadCompanions.GetBadCompanions.total")
                      .value());
+  EXPECT_EQ(1UL, decoder_callbacks_.clusterInfo()
+                     ->statsScope()
+                     .counterFromString("grpc.lyft_users_BadCompanions.GetBadCompanions.failure")
+                     .value());
+  EXPECT_EQ(1UL, decoder_callbacks_.clusterInfo()
+                     ->statsScope()
+                     .counterFromString("grpc.lyft_users_BadCompanions.GetBadCompanions.total")
+                     .value());
   EXPECT_FALSE(stream_info_.filterState()->hasDataWithName(HttpFilterNames::get().GrpcStats));
 }
 
 TEST_F(GrpcStatsFilterConfigTest, StatsHttp2NormalResponse) {
   config_.mutable_stats_for_all_methods()->set_value(true);
+  config_.set_replace_dots_in_grpc_service_name(true);
   initialize();
   Http::TestRequestHeaderMapImpl request_headers{
       {"content-type", "application/grpc"},
@@ -114,6 +124,14 @@ TEST_F(GrpcStatsFilterConfigTest, StatsHttp2NormalResponse) {
   EXPECT_EQ(1UL, decoder_callbacks_.clusterInfo()
                      ->statsScope()
                      .counterFromString("grpc.lyft.users.BadCompanions.GetBadCompanions.total")
+                     .value());
+  EXPECT_EQ(1UL, decoder_callbacks_.clusterInfo()
+                     ->statsScope()
+                     .counterFromString("grpc.lyft_users_BadCompanions.GetBadCompanions.success")
+                     .value());
+  EXPECT_EQ(1UL, decoder_callbacks_.clusterInfo()
+                     ->statsScope()
+                     .counterFromString("grpc.lyft_users_BadCompanions.GetBadCompanions.total")
                      .value());
   EXPECT_FALSE(stream_info_.filterState()->hasDataWithName(HttpFilterNames::get().GrpcStats));
 }

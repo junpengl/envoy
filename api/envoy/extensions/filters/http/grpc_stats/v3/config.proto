@@ -61,8 +61,10 @@ message FilterConfig {
   // request_message_count and response_message_count works.
   bool enable_upstream_stats = 4;
 
-  // if true, the filter will replace dots in the grpc_service_name before emitting the metrics.
-  // By default it is set as false.
+  // If true, the filter will replace dots in the grpc_service_name before emitting the metrics.
+  // Only works when :ref:`stats_for_all_methods
+  // <envoy_api_field_extensions.filters.http.grpc_stats.v3.FilterConfig.stats_for_all_methods>`
+  // is set to true. By default it is set as false.
   bool replace_dots_in_grpc_service_name = 5;
 }
 

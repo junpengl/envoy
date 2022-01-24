@@ -54,10 +54,11 @@ public:
   resolveDynamicServiceAndMethod(const Http::HeaderEntry* path) override;
 
   /**
-   * Resolve the gRPC service and method from the HTTP2 :path header.
+   * Resolve the gRPC service and method from the HTTP2 :path header. Replace dots in the gRPC
+   * service name if there are any.
    * @param path supplies the :path header.
    * @return if both gRPC serve and method have been resolved successfully returns
-   *   a populated RequestStatNames, otherwise returns an empty optional.
+   *   a populated RequestStatNames and an unique_ptr, otherwise returns an empty optional.
    */
   std::pair<absl::optional<RequestStatNames>, std::unique_ptr<std::string>>
   resolveDynamicServiceAndMethodWithDotReplaced(const Http::HeaderEntry* path) override;
