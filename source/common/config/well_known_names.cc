@@ -77,7 +77,7 @@ TagNameValues::TagNameValues() {
   addTokenized(MONGO_CMD, "mongo.*.cmd.$.**");
 
   // cluster.[<route_target_cluster>.]grpc.[<grpc_service>.](<grpc_method>.)*
-  addTokenized(GRPC_BRIDGE_METHOD, "cluster.*.grpc.*.$.**");
+  addRe2(GRPC_BRIDGE_METHOD, R"(^cluster\.<NAME>\.grpc\.<NAME>\.((<NAME>)\.))", ".grpc.");
 
   // http.[<stat_prefix>.]user_agent.(<user_agent>.)*
   addTokenized(HTTP_USER_AGENT, "http.*.user_agent.$.**");
@@ -95,7 +95,7 @@ TagNameValues::TagNameValues() {
   addRe2(SSL_CIPHER_SUITE, R"(^cluster\.<NAME>\.ssl\.ciphers(\.(<CIPHER>))$)", ".ssl.ciphers.");
 
   // cluster.[<route_target_cluster>.]grpc.(<grpc_service>.)*
-  addTokenized(GRPC_BRIDGE_SERVICE, "cluster.*.grpc.$.**");
+  addRe2(GRPC_BRIDGE_SERVICE, R"(^cluster\.<NAME>\.grpc\.((<NAME>)\.))", ".grpc.");
 
   // tcp.(<stat_prefix>.)*
   addTokenized(TCP_PREFIX, "tcp.$.**");
