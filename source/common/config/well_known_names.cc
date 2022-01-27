@@ -76,8 +76,8 @@ TagNameValues::TagNameValues() {
   // mongo.[<stat_prefix>.]cmd.(<cmd>.)*
   addTokenized(MONGO_CMD, "mongo.*.cmd.$.**");
 
-  // cluster.[<route_target_cluster>.]grpc.[<grpc_service>.](<grpc_method>.)*
-  addRe2(GRPC_BRIDGE_METHOD, R"(^cluster\.<NAME>\.grpc\.<NAME>\.((<NAME>)\.))", ".grpc.");
+  // cluster.[<route_target_cluster>.]grpc.[<grpc_service>.](<grpc_method>.)<base_stat>
+  addRegex(GRPC_BRIDGE_METHOD, R"(^cluster(?=\.).*?\.grpc(?=\.).*\.((.*?)\.)\w+?$)", ".grpc.");
 
   // http.[<stat_prefix>.]user_agent.(<user_agent>.)*
   addTokenized(HTTP_USER_AGENT, "http.*.user_agent.$.**");
@@ -145,6 +145,11 @@ void TagNameValues::addRe2(const std::string& name, const std::string& regex,
 
 void TagNameValues::addTokenized(const std::string& name, const std::string& tokens) {
   tokenized_descriptor_vec_.emplace_back(TokenizedDescriptor{name, tokens});
+}
+
+void TagNameValues::addRegex(const std::string& name, const std::string& regex,
+                             const std::string& substr) {
+  descriptor_vec_.emplace_back(Descriptor{name, regex, substr, Regex::Type::StdRegex});
 }
 
 } // namespace Config
