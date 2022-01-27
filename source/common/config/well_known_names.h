@@ -141,6 +141,7 @@ public:
   }
 
 private:
+  void addRegex(const std::string& name, const std::string& regex, const std::string& substr = "");
   void addRe2(const std::string& name, const std::string& regex, const std::string& substr = "");
 
   // See class doc for TagExtractorTokensImpl in
